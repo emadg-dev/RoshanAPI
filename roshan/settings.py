@@ -72,6 +72,16 @@ TEMPLATES = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'api.CustomClasses.CookieTokenAuthentication', 
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+}
+
 WSGI_APPLICATION = 'roshan.wsgi.application'
 
 
