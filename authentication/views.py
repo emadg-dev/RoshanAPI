@@ -2,11 +2,10 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework import status
-from django.contrib.auth import authenticate, login
-from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-from .serializers import UserSerializer
 from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
+from .serializers import UserSerializer
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -28,7 +27,7 @@ def login(request):
             value=token.key,
             httponly=True, 
             secure=False,
-            samesite='strict'
+            samesite='lax'
         )
         return response 
     except User.DoesNotExist:
@@ -51,7 +50,7 @@ def signup(request):
             value=token.key,
             httponly=True, 
             secure=False,
-            samesite='strict'
+            samesite='lax'
         )
         return response
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
@@ -87,7 +86,7 @@ def post_token(request):
             value=token.key,
             httponly=True, 
             secure=False,
-            samesite='strict'
+            samesite='lax'
         )
         return response
     

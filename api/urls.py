@@ -21,5 +21,8 @@ from authentication import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('authentication.urls')),
-    path('', views.home)
+    path('', views.home),
+    path('categories/', include('category.urls')),
+    #path('cart/', include('cart.urls')),
+    #path('products/', include('product.urls')),
 ]
