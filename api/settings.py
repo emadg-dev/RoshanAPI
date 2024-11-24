@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+
 import os
 from urllib.parse import urlparse
 from pathlib import Path
@@ -27,6 +28,10 @@ SECRET_KEY = 'django-insecure-eq4$!muhervkw5#*3bg9)fgf0fn=7f=nk*0hz+x@qxn$56yooy
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
+# DEBUG = os.environ.get("DEBUG")
+
+# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(",")
 
 
 # Application definition

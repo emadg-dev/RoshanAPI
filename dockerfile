@@ -6,9 +6,14 @@ WORKDIR /app
 
 COPY requirements.txt requirements.txt
 
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
+COPY entrypoint.sh entrypoint.sh
+
 COPY . /app/
+
+ENTRYPOINT [ "/app/entrypoint.sh" ]
 
 EXPOSE 8000
 
