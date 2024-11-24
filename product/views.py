@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from .serializers import ProductSerializer
 from .models import *
+from logger.CustomClasses import Log_Product_View
 
 
 @api_view(['POST','GET'])
@@ -36,7 +37,7 @@ def UpdateProduct(request, pk):
     
     if request.method == 'GET':
         serializer = ProductSerializer(product)
-        ProductViewLog.objects.create(user=request.user, product=product)
+        Log_Product_View(request.user, product)
         return Response(serializer.data)
     else:
         if not request.user.is_staff:
