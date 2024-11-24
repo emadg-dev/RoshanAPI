@@ -33,6 +33,18 @@ services:
     depends_on:
       - redis
 
+  beat:
+    container_name: beat
+    build: .
+    command: celery --app=api beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/app
+
+    depends_on:
+      - redis
+      - web
+
+
 # volumes:
 #   db_data:  # This will persist the SQLite database in Docker volume if needed
 
