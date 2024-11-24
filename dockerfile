@@ -4,16 +4,16 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY requirements.txt requirements.txt
+COPY requirements.txt /app/requirements.txt
 
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install -r /app/requirements.txt
 
 COPY entrypoint.sh entrypoint.sh
 
 COPY . /app/
 
-ENTRYPOINT [ "/app/entrypoint.sh" ]
+#ENTRYPOINT [ "/app/entrypoint.sh" ]
 
 EXPOSE 8000
 

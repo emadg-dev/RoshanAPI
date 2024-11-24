@@ -1,4 +1,6 @@
 superuser:
-username: admin
-password: 1899@api
+\nusername: admin
+\npassword: 1899@api
+\n
+docker exec -it roshan_api /bin/sh
 
