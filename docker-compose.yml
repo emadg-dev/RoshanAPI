@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///db.sqlite3 
+    networks:
+      - default
+
+# volumes:
+#   db_data:  # This will persist the SQLite database in Docker volume if needed
+
+networks:
+  default:
+    driver: bridge
