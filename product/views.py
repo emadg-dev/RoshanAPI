@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from .serializers import ProductSerializer
-from .models import Product
+from .models import *
 
 
 @api_view(['POST','GET'])
@@ -25,28 +25,9 @@ def ListProduct(request):
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
-    
-@api_view(['PUT','GET'])
-@permission_classes([IsAdminUser])
-def UpdateProduct(request, pk):
-    try:
-        product = Product.objects.get(pk=pk)
-    except Product.DoesNotExist:
-        return Response({"error":"Product with this primary key does not exist!"}, status=status.HTTP_404_NOT_FOUND)
-    
-    if request.method == 'GET':
-        product = Product.objects.get(pk=pk)
-        serializer = ProductSerializer(product)
-        return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = ProductSerializer(product, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 @api_view(['PUT','GET', 'DELETE'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAuthenticated])
 def UpdateProduct(request, pk):
     try:
         product = Product.objects.get(pk=pk)
@@ -55,13 +36,19 @@ def UpdateProduct(request, pk):
     
     if request.method == 'GET':
         serializer = ProductSerializer(product)
+        ProductViewLog.objects.create(user=request.user, product=product)
         return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = ProductSerializer(product, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        product.delete()
-        return Response({"message":"Item successfully deleted!"}, status=status.HTTP_204_NO_CONTENT)
+    else:
+        if not request.user.is_staff:
+            return Response( {"error": "You should have appropriate privilages to do that!"},
+                            status=status.HTTP_403_FORBIDDEN)
+        if request.method == 'PUT':
+            
+            serializer = ProductSerializer(product, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        elif request.method == 'DELETE':
+            product.delete()
+            return Response({"message":"Item successfully deleted!"}, status=status.HTTP_204_NO_CONTENT)
