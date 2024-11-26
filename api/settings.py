@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-eq4$!muhervkw5#*3bg9)fgf0fn=7f=nk*0hz+x@qxn$56yooy
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 # DEBUG = os.environ.get("DEBUG")
 
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'product',
     'category',
     'cart',
-    'statistic',
+    'logger',
     
 
 

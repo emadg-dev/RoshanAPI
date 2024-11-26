@@ -19,4 +19,6 @@ class CartItem(models.Model):
     product = models.ForeignKey(Product,
                                  on_delete=models.PROTECT)
     comment = models.TextField(max_length=200, default="", blank=True)
-    
+    def __str__(self):
+            return f"{self.user} - {self.product}  {self.quantity}"
+        

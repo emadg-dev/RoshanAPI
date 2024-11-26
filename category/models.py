@@ -8,4 +8,6 @@ class Category(models.Model):
     creator_user = models.ForeignKey(User, 
                                  on_delete=models.PROTECT, blank=True)
     comment = models.TextField(max_length=200, default="", blank=True)
-
+    def __str__(self):
+        return f"{self.name}"
+    
