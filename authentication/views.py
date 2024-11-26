@@ -10,7 +10,6 @@ from .serializers import UserSerializer
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login(request):
-
     username=request.data['username']
     password=request.data['password']
     if not username or not password: 
@@ -61,7 +60,7 @@ def logout(request):
     if request.user.is_authenticated:
         try:
             token = Token.objects.get(user=request.user)
-            #token.delete()
+            token.delete()
         except Token.DoesNotExist:
             return Response({"error": "token not found!"}, status=status.HTTP_404_NOT_FOUND)
         response = Response({"message": "User logged out successfully!"}, status=status.HTTP_200_OK)
@@ -70,28 +69,28 @@ def logout(request):
     return Response({"error": "User not authenticated"}, status=status.HTTP_401_UNAUTHORIZED) 
 
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def post_token(request):
-    token_key = request.data['token']
-    if not token_key:
-        return Response({"error": "Please insert a valid value for token!"}, status=status.HTTP_400_BAD_REQUEST)
-    try:
-        token = Token.objects.get(key=token_key)
-        user = token.user
-        serializer = UserSerializer(user)
-        response = Response({"user": serializer.data})
-        response.set_cookie(
-            key='auth_token',
-            value=token.key,
-            httponly=True, 
-            secure=False,
-            samesite='lax'
-        )
-        return response
+# @api_view(['POST'])
+# @permission_classes([AllowAny])
+# def post_token(request):
+#     token_key = request.data['token']
+#     if not token_key:
+#         return Response({"error": "Please insert a valid value for token!"}, status=status.HTTP_400_BAD_REQUEST)
+#     try:
+#         token = Token.objects.get(key=token_key)
+#         user = token.user
+#         serializer = UserSerializer(user)
+#         response = Response({"user": serializer.data})
+#         response.set_cookie(
+#             key='auth_token',
+#             value=token.key,
+#             httponly=True, 
+#             secure=False,
+#             samesite='lax'
+#         )
+#         return response
     
-    except Token.DoesNotExist:
-        return Response({"error":"Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+#     except Token.DoesNotExist:
+#         return Response({"error":"Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -100,7 +99,3 @@ def home(request):
     return Response({"message": f"Hello, {request.user.username}!"})
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def home(request):
-    return Response({"message": f"Hello, {request.user.username}!"})

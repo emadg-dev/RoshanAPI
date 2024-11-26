@@ -1,5 +1,5 @@
 venv/
-
+*.csv
 __pycache__
-.pyc
+*.pyc
 api/__pycache__/
