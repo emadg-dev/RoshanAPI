@@ -61,18 +61,21 @@ def ListCategoryProducts(request, pk):
         products = Product.objects.filter(category=category.pk)
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
-    
-    elif request.method == 'POST':
-        product_id = request.data.get('pk')
-        if product_id:
-            try:
-                product = Product.objects.get(pk=product_id)
-                product.category = category
-                product.save()
-                products = Product.objects.filter(category=category.pk)
-                serializer = ProductSerializer(products, many=True)
-                return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-            except Product.DoesNotExist:
-                return Response({"error":"Product with this primary key does not exist!"},
-                         status=status.HTTP_404_NOT_FOUND)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        if not request.user.is_staff:
+            return Response( {"error": "You should have appropriate privilages to do that!"},
+                            status=status.HTTP_403_FORBIDDEN)
+        if request.method == 'POST':
+            product_id = request.data.get('pk')
+            if product_id:
+                try:
+                    product = Product.objects.get(pk=product_id)
+                    product.category = category
+                    product.save()
+                    products = Product.objects.filter(category=category.pk)
+                    serializer = ProductSerializer(products, many=True)
+                    return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+                except Product.DoesNotExist:
+                    return Response({"error":"Product with this primary key does not exist!"},
+                            status=status.HTTP_404_NOT_FOUND)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

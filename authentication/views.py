@@ -13,7 +13,8 @@ def login(request):
     username=request.data['username']
     password=request.data['password']
     if not username or not password: 
-        return Response({"error": "Please insert valid values for username and password!"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Please insert valid values for username and password!"}, 
+                        status=status.HTTP_400_BAD_REQUEST)
     try:
         user = User.objects.get(username=username)
         if not user.check_password(password):
@@ -67,30 +68,6 @@ def logout(request):
         response.delete_cookie('auth_token')
         return response
     return Response({"error": "User not authenticated"}, status=status.HTTP_401_UNAUTHORIZED) 
-
-
-# @api_view(['POST'])
-# @permission_classes([AllowAny])
-# def post_token(request):
-#     token_key = request.data['token']
-#     if not token_key:
-#         return Response({"error": "Please insert a valid value for token!"}, status=status.HTTP_400_BAD_REQUEST)
-#     try:
-#         token = Token.objects.get(key=token_key)
-#         user = token.user
-#         serializer = UserSerializer(user)
-#         response = Response({"user": serializer.data})
-#         response.set_cookie(
-#             key='auth_token',
-#             value=token.key,
-#             httponly=True, 
-#             secure=False,
-#             samesite='lax'
-#         )
-#         return response
-    
-#     except Token.DoesNotExist:
-#         return Response({"error":"Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
